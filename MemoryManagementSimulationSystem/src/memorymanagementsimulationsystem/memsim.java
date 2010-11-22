@@ -29,7 +29,7 @@ public class memsim {
         }
         pManager.removeProcessFromMemory("A");
         pManager.removeProcessFromMemory("D");
-        pManager.addNewProcess(250);
+        pManager.addNewProcess(150);
         pManager.printMemory();
         //pManager.printProcesses();
     }
