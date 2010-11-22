@@ -10,6 +10,7 @@ package memorymanagementsimulationsystem;
  */
 public class ProcessManager {
 
+    private final int OUT_OF_MEMORY = -1;
     public MainMemory mainMemory;
     public ProcessTable processTable;
     public Character processNamer = 'A';
@@ -25,12 +26,15 @@ public class ProcessManager {
         int processStartingPosition;
         /*If we can actually fit the process in.*/
         if(mainMemory.availableMemory()>processSize){
-            processStartingPosition = mainMemory.addNewProcess(processNamer.toString(),processSize);
+            if((processStartingPosition = mainMemory.addNewProcess(processNamer.toString(),processSize))==OUT_OF_MEMORY){
+                System.out.println("Please defragment, out of memory.");
+                return;
+            }
             processTable.addNewProcess(processNamer.toString(), processSize, processStartingPosition);
             processNamer++;
             return;
         }
-        System.out.println("Process Manager: No room for process.");
+        System.out.println("Process Manager: No room for process, please defragment.");
     }
     public void printMemory(){
         mainMemory.displayMemory();
