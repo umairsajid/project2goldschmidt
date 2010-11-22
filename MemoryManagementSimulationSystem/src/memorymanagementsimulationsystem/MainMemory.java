@@ -49,18 +49,47 @@ public class MainMemory {
     public Integer addNewProcess(String processName, Integer processSize) {
         int startingFreePosition = 0;
         int processStartingPosition;
-        for (MemoryCell m : memoryCells) {
-            if (!m.isOccupied()) {
-                startingFreePosition = m.getPosition();
-                break;
-            }
+        int freeMemBlockSize;
+        /*Check for first free memory cell*/
+        if ((startingFreePosition = getFirstFreeCellLocation()) < 0) {
+            return -1;
         }
+        /*Check size of free memory block.*/
+        freeMemBlockSize = getSizeOfMemoryBlock(startingFreePosition);
         processStartingPosition = startingFreePosition;
-        for (int i = startingFreePosition; i < startingFreePosition + processSize; i++) {
+        /*Allocate process at starting position.*/
+        allocateProcess(processName, processSize, processStartingPosition);
+
+        return processStartingPosition;
+    }
+
+    private void allocateProcess(String processName, int processSize, int processStartingPosition) {
+        for (int i = processStartingPosition; i < processStartingPosition + processSize; i++) {
             memoryCells[i].setOwnedProcessType(processName);
         }
         freeMemory -= processSize;
-        return processStartingPosition;
+    }
+
+    private Integer getFirstFreeCellLocation() {
+        for (MemoryCell m : memoryCells) {
+            if (!m.isOccupied()) {
+                return m.getPosition();
+            }
+        }
+        return -1;
+    }
+
+    private int getSizeOfMemoryBlock(Integer startingPosition) {
+        int size = 0;
+        int position = startingPosition;
+        try {
+            while (!memoryCells[position].isOccupied()) {
+                size++;
+                position++;
+            }
+        } catch (ArrayIndexOutOfBoundsException e) {
+        }
+        return size;
     }
 
     public int availableMemory() {
