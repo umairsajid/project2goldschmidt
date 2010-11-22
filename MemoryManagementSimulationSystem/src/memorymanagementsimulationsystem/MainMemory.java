@@ -134,7 +134,34 @@ public class MainMemory {
     }
 
     public int addNewProcessWorst(String processName, Integer processSize) {
-        return -1;
+        int startingFreePosition = 0;
+        int processStartingPosition;
+        int freeMemBlockSize;
+        ArrayList<MemoryBlock> freeMemoryBlocks = new ArrayList<MemoryBlock>();
+
+        /*Find all free memory blocks*/
+
+
+        /*Check for first free memory cell*/
+        if ((startingFreePosition = getFirstFreeCellLocation(0)) < 0) {
+            return OUT_OF_MEMORY;
+        }
+
+        /*Check size of free memory block.*/
+        while ((freeMemBlockSize = getSizeOfMemoryBlock(startingFreePosition)) > 0) {
+            freeMemoryBlocks.add(new MemoryBlock(startingFreePosition, freeMemBlockSize));
+            /*Check next free memory block.*/
+            if ((startingFreePosition = getFirstFreeCellLocation(startingFreePosition + freeMemBlockSize)) < 0) {
+                break;
+            }
+        }
+        Collections.sort(freeMemoryBlocks, new SortByLargestSize());
+
+        /*Find smallest memory block that process can fit into*/
+        processStartingPosition = findLargestMemoryBlock(freeMemoryBlocks, processSize);
+        /*Allocate process at starting position.*/
+        allocateProcess(processName, processSize, processStartingPosition);
+        return processStartingPosition;
     }
 
     public int addNewProcessBest(String processName, Integer processSize) {
@@ -159,7 +186,7 @@ public class MainMemory {
                 break;
             }
         }
-        Collections.sort(freeMemoryBlocks,new SortBySize());
+        Collections.sort(freeMemoryBlocks, new SortBySmallestSize());
 
         /*Find smallest memory block that process can fit into*/
         processStartingPosition = findSmallestMemoryBlock(freeMemoryBlocks, processSize);
@@ -168,14 +195,24 @@ public class MainMemory {
 
         return processStartingPosition;
     }
+    /*
+     * @return Returns starting position of smallest memory block that process can fit into.
+     */
 
     private int findSmallestMemoryBlock(ArrayList<MemoryBlock> freeMemoryBlocks, int processSize) {
-        for(MemoryBlock m : freeMemoryBlocks){
+        for (MemoryBlock m : freeMemoryBlocks) {
             /*If the memory block is large enough to hold the process.*/
-            if(m.getSize()>=processSize){
+            if (m.getSize() >= processSize) {
                 return m.getStartingPosition();
             }
         }
+        return -1;
+    }
+
+    private int findLargestMemoryBlock(ArrayList<MemoryBlock> freeMemoryBlocks, Integer processSize) {
+        MemoryBlock m = freeMemoryBlocks.get(0);
+        if(m.getSize()>=processSize)
+            return m.getStartingPosition();
         return -1;
     }
 }
