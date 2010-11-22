@@ -39,7 +39,7 @@ public class MainMemory {
             } else {
                 System.out.print(freeRepresentation);
             }
-            if(m.getPosition()%100==0){
+            if(m.getPosition()%80==79){
                 System.out.println();
             }
         }
