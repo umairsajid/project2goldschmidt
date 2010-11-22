@@ -28,6 +28,6 @@ public class memsim {
             pManager.addNewProcess(80);
         }
         pManager.printMemory();
-        pManager.printProcesses();
+        //pManager.printProcesses();
     }
 }
