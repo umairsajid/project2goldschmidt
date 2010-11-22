@@ -130,6 +130,35 @@ public class MainMemory {
     }
 
     public int addNewProcessNext(String processName, Integer processSize) {
+        LastAllocatedBlockPosition blockPos = LastAllocatedBlockPosition.getInstance();
+        int startingFreePosition = 0;
+        int processStartingPosition = -1;
+        int freeMemBlockSize;
+        ArrayList<MemoryBlock> freeMemoryBlocks = new ArrayList<MemoryBlock>();
+
+        /*Find all free memory blocks*/
+
+        /*Check for first free memory cell*/
+        if ((startingFreePosition = getFirstFreeCellLocation(0)) < 0) {
+            return OUT_OF_MEMORY;
+        }
+
+        /*Check size of free memory block.*/
+        while ((freeMemBlockSize = getSizeOfMemoryBlock(startingFreePosition)) > 0) {
+            freeMemoryBlocks.add(new MemoryBlock(startingFreePosition, freeMemBlockSize));
+            /*Check next free memory block.*/
+            if ((startingFreePosition = getFirstFreeCellLocation(startingFreePosition + freeMemBlockSize)) < 0) {
+                break;
+            }
+        }
+
+        /*Find the closest free memory block to the last allocation.*/
+        if((processStartingPosition = findNextMemoryBlock(freeMemoryBlocks, processSize))!=-1){
+            blockPos.setPosition(processStartingPosition);
+            allocateProcess(processName,processSize,processStartingPosition);
+            return processStartingPosition;
+        }
+
         return -1;
     }
 
@@ -211,8 +240,19 @@ public class MainMemory {
 
     private int findLargestMemoryBlock(ArrayList<MemoryBlock> freeMemoryBlocks, Integer processSize) {
         MemoryBlock m = freeMemoryBlocks.get(0);
-        if(m.getSize()>=processSize)
+        if (m.getSize() >= processSize) {
             return m.getStartingPosition();
+        }
+        return -1;
+    }
+
+    private int findNextMemoryBlock(ArrayList<MemoryBlock> freeMemoryBlocks, Integer processSize) {
+        Collections.sort(freeMemoryBlocks, new SortByPosition());
+        for (MemoryBlock m : freeMemoryBlocks) {
+            if (m.getSize() >= processSize) {
+                return m.getStartingPosition();
+            }
+        }
         return -1;
     }
 }
