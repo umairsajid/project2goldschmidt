@@ -27,7 +27,7 @@ public class ProcessManager {
         /*If we can actually fit the process in.*/
         if(mainMemory.availableMemory()>processSize){
             if((processStartingPosition = mainMemory.addNewProcess(processNamer.toString(),processSize))==OUT_OF_MEMORY){
-                //System.out.println("Please defragment, out of memory.");
+                System.out.println("Please defragment, out of memory.");
                 return;
             }
             processTable.addNewProcess(processNamer.toString(), processSize, processStartingPosition);

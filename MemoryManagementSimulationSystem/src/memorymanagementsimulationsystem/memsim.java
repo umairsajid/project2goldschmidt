@@ -20,7 +20,7 @@ public class memsim {
     public static void configureSimulation(String args[]) {
         pManager = new ProcessManager();
         AllocationAlgorithm algorithmType = AllocationAlgorithm.getInstance();
-        algorithmType.setAlgorithm("worst");
+        algorithmType.setAlgorithm("next");
     }
 
     public static void runSimulation() {
