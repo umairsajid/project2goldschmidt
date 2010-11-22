@@ -39,28 +39,43 @@ public class MainMemory {
             } else {
                 System.out.print(freeRepresentation);
             }
-            if(m.getPosition()%80==79){
+            if (m.getPosition() % 80 == 79) {
                 System.out.println();
             }
         }
         System.out.println();
     }
 
-    public void addNewProcess(String processName, Integer processSize) {
+    public Integer addNewProcess(String processName, Integer processSize) {
         int startingFreePosition = 0;
+        int processStartingPosition;
         for (MemoryCell m : memoryCells) {
             if (!m.isOccupied()) {
                 startingFreePosition = m.getPosition();
                 break;
             }
         }
+        processStartingPosition = startingFreePosition;
         for (int i = startingFreePosition; i < startingFreePosition + processSize; i++) {
             memoryCells[i].setOwnedProcessType(processName);
         }
         freeMemory -= processSize;
+        return processStartingPosition;
     }
 
     public int availableMemory() {
         return freeMemory;
+    }
+
+    public void addNewProcessFirst(String processName, Integer processSize) {
+    }
+
+    public void addNewProcessNext(String processName, Integer processSize) {
+    }
+
+    public void addNewProcessWorst(String processName, Integer processSize) {
+    }
+
+    public void addNewProcessBest(String processName, Integer processSize) {
     }
 }
