@@ -38,4 +38,12 @@ public class ProcessManager {
     public void printProcesses(){
         System.out.println(processTable.getProcessses());
     }
+    public void removeProcessFromMemory(String processName){
+        Process p;
+        if((p = processTable.lookup(processName))==null){
+            return;
+        }
+        mainMemory.removeProcess(p.getStartingPosition(),p.getSize());
+        processTable.removeProcess(p);
+    }
 }

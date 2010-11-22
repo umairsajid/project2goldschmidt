@@ -63,6 +63,11 @@ public class MainMemory {
         return processStartingPosition;
     }
 
+    public void removeProcess(Integer startingPosition, Integer size) {
+        for(int i=startingPosition;i<startingPosition+size;i++){
+            memoryCells[i].freeCell();
+        }
+    }
     private void allocateProcess(String processName, int processSize, int processStartingPosition) {
         for (int i = processStartingPosition; i < processStartingPosition + processSize; i++) {
             memoryCells[i].setOwnedProcessType(processName);
@@ -107,4 +112,5 @@ public class MainMemory {
 
     public void addNewProcessBest(String processName, Integer processSize) {
     }
+
 }
