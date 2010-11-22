@@ -25,8 +25,8 @@ public class ProcessTable {
         processes.put(processName,new Process(processName,processSize,processStartingPosition));
     }
 
-    void removeProcess(Process p) {
-        //throw new UnsupportedOperationException("Not yet implemented");
+    protected void removeProcess(Process p) {
+        processes.remove(p.getName());
     }
 
     protected Process lookup(String processName) {

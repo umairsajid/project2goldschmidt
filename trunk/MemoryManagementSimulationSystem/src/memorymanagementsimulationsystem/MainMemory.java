@@ -4,6 +4,8 @@
  */
 package memorymanagementsimulationsystem;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author Lew Gordon
@@ -106,7 +108,7 @@ public class MainMemory {
             if ((startingFreePosition = getFirstFreeCellLocation(startingFreePosition + freeMemBlockSize)) < 0) {
                 return OUT_OF_MEMORY;
             }
-            System.out.println("Free mem block size is "+freeMemBlockSize);
+            System.out.println("Free mem block size is " + freeMemBlockSize);
         }
         processStartingPosition = startingFreePosition;
 
@@ -116,12 +118,41 @@ public class MainMemory {
         return processStartingPosition;
     }
 
-    public void addNewProcessNext(String processName, Integer processSize) {
+    public int addNewProcessNext(String processName, Integer processSize) {
+        return -1;
     }
 
-    public void addNewProcessWorst(String processName, Integer processSize) {
+    public int addNewProcessWorst(String processName, Integer processSize) {
+        return -1;
     }
 
-    public void addNewProcessBest(String processName, Integer processSize) {
+    public int addNewProcessBest(String processName, Integer processSize) {
+        int startingFreePosition = 0;
+        int processStartingPosition;
+        int freeMemBlockSize;
+        ArrayList<MemoryBlock> freeMemoryBlocks = new ArrayList<MemoryBlock>();
+
+        /*Find all free memory blocks*/
+        
+
+        /*Check for first free memory cell*/
+        if ((startingFreePosition = getFirstFreeCellLocation(0)) < 0) {
+            return OUT_OF_MEMORY;
+        }
+
+        /*Check size of free memory block.*/
+        while ((freeMemBlockSize = getSizeOfMemoryBlock(startingFreePosition)) < processSize) {
+            /*Memory block too small check next one.*/
+            if ((startingFreePosition = getFirstFreeCellLocation(startingFreePosition + freeMemBlockSize)) < 0) {
+                return OUT_OF_MEMORY;
+            }
+            System.out.println("Free mem block size is " + freeMemBlockSize);
+        }
+        processStartingPosition = startingFreePosition;
+
+        /*Allocate process at starting position.*/
+        allocateProcess(processName, processSize, processStartingPosition);
+
+        return processStartingPosition;
     }
 }
