@@ -22,10 +22,11 @@ public class ProcessManager {
     }
 
     public void addNewProcess(Integer processSize) {
+        int processStartingPosition;
         /*If we can actually fit the process in.*/
         if(mainMemory.availableMemory()>processSize){
-            mainMemory.addNewProcess(processNamer.toString(),processSize);
-            processTable.addNewProcess(processNamer.toString(), processSize);
+            processStartingPosition = mainMemory.addNewProcess(processNamer.toString(),processSize);
+            processTable.addNewProcess(processNamer.toString(), processSize, processStartingPosition);
             processNamer++;
             return;
         }

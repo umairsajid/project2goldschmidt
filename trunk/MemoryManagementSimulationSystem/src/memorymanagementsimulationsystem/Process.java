@@ -12,10 +12,12 @@ public class Process {
 
     private String name;
     private Integer size;
-
-    public Process(String name,Integer size){
+    private Integer startingPosition;
+    public Process(String name,Integer size, Integer startingPosition){
         this.name = name;
         this.size = size;
+        this.startingPosition = startingPosition;
+
     }
     public String getName() {
         return name;
@@ -23,6 +25,9 @@ public class Process {
 
     public Integer getSize() {
         return size;
+    }
+    public Integer getStartingPosition(){
+        return startingPosition;
     }
     @Override
     public String toString(){

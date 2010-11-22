@@ -4,7 +4,7 @@
  */
 package memorymanagementsimulationsystem;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  *
@@ -12,21 +12,16 @@ import java.util.ArrayList;
  */
 public class ProcessTable {
 
-    public ArrayList<Process> processes;
+    public HashMap<String,Process> processes;
     
     public ProcessTable(){
-        processes = new ArrayList<Process>();
+        processes = new HashMap<String,Process>();
     }
     public String getProcessses() {
-        String toReturn = new String();
-        toReturn += "*****PROCESS LIST*****\n";
-        for(Process p : processes){
-            toReturn += p.toString()+'\n';
-        }
-        return toReturn;
+        return processes.toString();
     }
 
-    public void addNewProcess(String processName, Integer processSize) {
-        processes.add(new Process(processName,processSize));
+    public void addNewProcess(String processName, Integer processSize, int processStartingPosition) {
+        processes.put(processName,new Process(processName,processSize,processStartingPosition));
     }
 }
