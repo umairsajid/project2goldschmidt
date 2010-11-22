@@ -10,6 +10,7 @@ package memorymanagementsimulationsystem;
  */
 public class MainMemory {
 
+    private final int OUT_OF_MEMORY = -1;
     private final String osRepresentation = "#";  //What to display if the space is owned by the OS
     private final String freeRepresentation = ".";  //What to display if the space is free
     private final String OP_SYS = "OS";
@@ -47,27 +48,15 @@ public class MainMemory {
     }
 
     public Integer addNewProcess(String processName, Integer processSize) {
-        int startingFreePosition = 0;
-        int processStartingPosition;
-        int freeMemBlockSize;
-        /*Check for first free memory cell*/
-        if ((startingFreePosition = getFirstFreeCellLocation()) < 0) {
-            return -1;
-        }
-        /*Check size of free memory block.*/
-        freeMemBlockSize = getSizeOfMemoryBlock(startingFreePosition);
-        processStartingPosition = startingFreePosition;
-        /*Allocate process at starting position.*/
-        allocateProcess(processName, processSize, processStartingPosition);
-
-        return processStartingPosition;
+        return addNewProcessFirst(processName, processSize);
     }
 
     public void removeProcess(Integer startingPosition, Integer size) {
-        for(int i=startingPosition;i<startingPosition+size;i++){
+        for (int i = startingPosition; i < startingPosition + size; i++) {
             memoryCells[i].freeCell();
         }
     }
+
     private void allocateProcess(String processName, int processSize, int processStartingPosition) {
         for (int i = processStartingPosition; i < processStartingPosition + processSize; i++) {
             memoryCells[i].setOwnedProcessType(processName);
@@ -75,13 +64,13 @@ public class MainMemory {
         freeMemory -= processSize;
     }
 
-    private Integer getFirstFreeCellLocation() {
-        for (MemoryCell m : memoryCells) {
-            if (!m.isOccupied()) {
-                return m.getPosition();
+    private Integer getFirstFreeCellLocation(int startingLocation) {
+        for (int i = startingLocation; i < memoryCells.length; i++) {
+            if (!memoryCells[i].isOccupied()) {
+                return memoryCells[i].getPosition();
             }
         }
-        return -1;
+        return OUT_OF_MEMORY;
     }
 
     private int getSizeOfMemoryBlock(Integer startingPosition) {
@@ -101,7 +90,30 @@ public class MainMemory {
         return freeMemory;
     }
 
-    public void addNewProcessFirst(String processName, Integer processSize) {
+    public int addNewProcessFirst(String processName, Integer processSize) {
+        int startingFreePosition = 0;
+        int processStartingPosition;
+        int freeMemBlockSize;
+
+        /*Check for first free memory cell*/
+        if ((startingFreePosition = getFirstFreeCellLocation(0)) < 0) {
+            return OUT_OF_MEMORY;
+        }
+
+        /*Check size of free memory block.*/
+        while ((freeMemBlockSize = getSizeOfMemoryBlock(startingFreePosition)) < processSize) {
+            /*Memory block too small check next one.*/
+            if ((startingFreePosition = getFirstFreeCellLocation(startingFreePosition + freeMemBlockSize)) < 0) {
+                return OUT_OF_MEMORY;
+            }
+            System.out.println("Free mem block size is "+freeMemBlockSize);
+        }
+        processStartingPosition = startingFreePosition;
+
+        /*Allocate process at starting position.*/
+        allocateProcess(processName, processSize, processStartingPosition);
+
+        return processStartingPosition;
     }
 
     public void addNewProcessNext(String processName, Integer processSize) {
@@ -112,5 +124,4 @@ public class MainMemory {
 
     public void addNewProcessBest(String processName, Integer processSize) {
     }
-
 }
