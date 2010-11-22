@@ -32,4 +32,8 @@ public class MemoryBlock {
     protected void setStartingPosition(){
         this.startingPosition = startingPosition;
     }
+    @Override
+    public String toString(){
+        return "StartPos: "+startingPosition+" Size: "+size;
+    }
 }
