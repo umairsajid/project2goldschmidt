@@ -5,6 +5,7 @@
 package memorymanagementsimulationsystem;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  *
@@ -50,7 +51,18 @@ public class MainMemory {
     }
 
     public Integer addNewProcess(String processName, Integer processSize) {
-        return addNewProcessFirst(processName, processSize);
+        AllocationAlgorithm algorithmType = AllocationAlgorithm.getInstance();
+        String algorithm = algorithmType.getAlgorithm();
+        if (algorithm.equals("first")) {
+            return addNewProcessFirst(processName, processSize);
+        } else if (algorithm.equals("best")) {
+            return addNewProcessBest(processName, processSize);
+        } else if (algorithm.equals("next")) {
+            return addNewProcessNext(processName, processSize);
+        } else if (algorithm.equals("worst")) {
+            return addNewProcessWorst(processName, processSize);
+        }
+        return -1;
     }
 
     public void removeProcess(Integer startingPosition, Integer size) {
@@ -101,7 +113,6 @@ public class MainMemory {
         if ((startingFreePosition = getFirstFreeCellLocation(0)) < 0) {
             return OUT_OF_MEMORY;
         }
-
         /*Check size of free memory block.*/
         while ((freeMemBlockSize = getSizeOfMemoryBlock(startingFreePosition)) < processSize) {
             /*Memory block too small check next one.*/
@@ -133,7 +144,7 @@ public class MainMemory {
         ArrayList<MemoryBlock> freeMemoryBlocks = new ArrayList<MemoryBlock>();
 
         /*Find all free memory blocks*/
-        
+
 
         /*Check for first free memory cell*/
         if ((startingFreePosition = getFirstFreeCellLocation(0)) < 0) {
@@ -141,18 +152,30 @@ public class MainMemory {
         }
 
         /*Check size of free memory block.*/
-        while ((freeMemBlockSize = getSizeOfMemoryBlock(startingFreePosition)) < processSize) {
-            /*Memory block too small check next one.*/
+        while ((freeMemBlockSize = getSizeOfMemoryBlock(startingFreePosition)) > 0) {
+            freeMemoryBlocks.add(new MemoryBlock(startingFreePosition, freeMemBlockSize));
+            /*Check next free memory block.*/
             if ((startingFreePosition = getFirstFreeCellLocation(startingFreePosition + freeMemBlockSize)) < 0) {
-                return OUT_OF_MEMORY;
+                break;
             }
-            System.out.println("Free mem block size is " + freeMemBlockSize);
         }
-        processStartingPosition = startingFreePosition;
+        Collections.sort(freeMemoryBlocks,new SortBySize());
 
+        /*Find smallest memory block that process can fit into*/
+        processStartingPosition = findSmallestMemoryBlock(freeMemoryBlocks, processSize);
         /*Allocate process at starting position.*/
         allocateProcess(processName, processSize, processStartingPosition);
 
         return processStartingPosition;
+    }
+
+    private int findSmallestMemoryBlock(ArrayList<MemoryBlock> freeMemoryBlocks, int processSize) {
+        for(MemoryBlock m : freeMemoryBlocks){
+            /*If the memory block is large enough to hold the process.*/
+            if(m.getSize()>=processSize){
+                return m.getStartingPosition();
+            }
+        }
+        return -1;
     }
 }

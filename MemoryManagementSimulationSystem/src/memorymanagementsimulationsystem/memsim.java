@@ -20,16 +20,18 @@ public class memsim {
     public static void configureSimulation(String args[]) {
         pManager = new ProcessManager();
         AllocationAlgorithm algorithmType = AllocationAlgorithm.getInstance();
-        algorithmType.setAlgorithm("next");
+        algorithmType.setAlgorithm("best");
     }
 
     public static void runSimulation() {
-        for (int i = 0; i < 26; i++) {
+        for (int i = 0; i < 13; i++) {
             pManager.addNewProcess(80);
         }
         pManager.removeProcessFromMemory("A");
         pManager.removeProcessFromMemory("D");
-        pManager.addNewProcess(150);
+        for (int i = 0; i < 13; i++) {
+            pManager.addNewProcess(80);
+        }
         pManager.printMemory();
         //pManager.printProcesses();
     }
