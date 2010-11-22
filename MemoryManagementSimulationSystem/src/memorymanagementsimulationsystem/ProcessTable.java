@@ -24,4 +24,12 @@ public class ProcessTable {
     public void addNewProcess(String processName, Integer processSize, int processStartingPosition) {
         processes.put(processName,new Process(processName,processSize,processStartingPosition));
     }
+
+    void removeProcess(Process p) {
+        //throw new UnsupportedOperationException("Not yet implemented");
+    }
+
+    protected Process lookup(String processName) {
+        return processes.get(processName);
+    }
 }
