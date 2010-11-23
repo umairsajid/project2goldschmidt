@@ -15,39 +15,46 @@ public class ProcessManager {
     public ProcessTable processTable;
     public Character processNamer = 'A';
 
-    public ProcessManager(){
+    public ProcessManager() {
         mainMemory = new MainMemory();
         processTable = new ProcessTable();
     }
+
     public void defragmentMemory() {
     }
 
     public void addNewProcess(Integer processSize) {
         int processStartingPosition;
         /*If we can actually fit the process in.*/
-        if(mainMemory.availableMemory()>processSize){
-            if((processStartingPosition = mainMemory.addNewProcess(processNamer.toString(),processSize))==OUT_OF_MEMORY){
+        if (mainMemory.availableMemory() >= processSize) {
+            if ((processStartingPosition = mainMemory.addNewProcess(processNamer.toString(), processSize)) == OUT_OF_MEMORY) {
                 System.out.println("Please defragment, out of memory.");
                 return;
             }
             processTable.addNewProcess(processNamer.toString(), processSize, processStartingPosition);
+            if (processNamer.equals('\\')) {
+                processNamer = 'a';
+            }
             processNamer++;
             return;
         }
         System.out.println("Process Manager: No room for process, please defragment.");
     }
-    public void printMemory(){
+
+    public void printMemory() {
         mainMemory.displayMemory();
     }
-    public void printProcesses(){
+
+    public void printProcesses() {
         System.out.println(processTable.getProcessses());
     }
-    public void removeProcessFromMemory(String processName){
+
+    public void removeProcessFromMemory(String processName) {
         Process p;
-        if((p = processTable.lookup(processName))==null){
+        if ((p = processTable.lookup(processName)) == null) {
             return;
         }
-        mainMemory.removeProcess(p.getStartingPosition(),p.getSize());
+        mainMemory.removeProcess(p.getStartingPosition(), p.getSize());
         processTable.removeProcess(p);
     }
 }

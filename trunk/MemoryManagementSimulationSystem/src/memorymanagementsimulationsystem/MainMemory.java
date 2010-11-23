@@ -69,6 +69,7 @@ public class MainMemory {
         for (int i = startingPosition; i < startingPosition + size; i++) {
             memoryCells[i].freeCell();
         }
+        freeMemory += size;
     }
 
     private void allocateProcess(String processName, int processSize, int processStartingPosition) {
@@ -115,6 +116,7 @@ public class MainMemory {
         }
         /*Check size of free memory block.*/
         while ((freeMemBlockSize = getSizeOfMemoryBlock(startingFreePosition)) < processSize) {
+            System.out.println("Free block size is "+freeMemBlockSize);
             /*Memory block too small check next one.*/
             if ((startingFreePosition = getFirstFreeCellLocation(startingFreePosition + freeMemBlockSize)) < 0) {
                 return OUT_OF_MEMORY;
