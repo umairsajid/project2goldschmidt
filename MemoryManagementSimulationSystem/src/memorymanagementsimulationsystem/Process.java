@@ -33,4 +33,7 @@ public class Process {
     public String toString(){
         return "Process ID: "+name+" Size: "+size;
     }
+    public void setStartingPosition(int position){
+        this.startingPosition = position;
+    }
 }

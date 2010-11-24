@@ -32,6 +32,20 @@ public class MainMemory {
         freeMemory = 2320;
     }
 
+    public ArrayList<Process> defragment(){
+        ArrayList<Process> updatedProcesses = new ArrayList<Process>();
+        int freeBlockStartingPosition = 0;
+        int freeBlockSize = 0;
+        /*Find first free memory block*/
+        while((freeBlockStartingPosition+freeBlockSize)<2400){
+            freeBlockStartingPosition = getFirstFreeCellLocation(freeBlockStartingPosition);
+            freeBlockSize = getSizeOfMemoryBlock(freeBlockStartingPosition);
+        }
+        /*If there is one*/
+        /*Find first process that fits into the block.*/
+        return updatedProcesses;
+    }
+
     public void displayMemory() {
         for (MemoryCell m : memoryCells) {
             if (m.isOccupied()) {
@@ -257,4 +271,5 @@ public class MainMemory {
         }
         return -1;
     }
+
 }

@@ -4,6 +4,9 @@
  */
 package memorymanagementsimulationsystem;
 
+import java.util.ArrayList;
+import java.util.Collections;
+
 /**
  *
  * @author Lew Gordon
@@ -11,16 +14,19 @@ package memorymanagementsimulationsystem;
 public class ProcessManager {
 
     private final int OUT_OF_MEMORY = -1;
+    private ArrayList<Process> processes;
     public MainMemory mainMemory;
-    public ProcessTable processTable;
     public Character processNamer = 'A';
 
     public ProcessManager() {
         mainMemory = new MainMemory();
-        processTable = new ProcessTable();
+        processes = new ArrayList<Process>();
     }
 
     public void defragmentMemory() {
+        System.out.println("Defragmenting...");
+        /**/
+        //updateProcesses = mainMemory.defragment();
     }
 
     public void addNewProcess(Integer processSize) {
@@ -31,14 +37,15 @@ public class ProcessManager {
                 System.out.println("Please defragment, out of memory.");
                 return;
             }
-            processTable.addNewProcess(processNamer.toString(), processSize, processStartingPosition);
+            processes.add(new Process(processNamer.toString(), processSize, processStartingPosition));
             if (processNamer.equals('\\')) {
                 processNamer = 'a';
             }
             processNamer++;
             return;
         }
-        System.out.println("Process Manager: No room for process, please defragment.");
+        //printProcesses();
+        defragmentMemory();
     }
 
     public void printMemory() {
@@ -46,15 +53,24 @@ public class ProcessManager {
     }
 
     public void printProcesses() {
-        System.out.println(processTable.getProcessses());
+        System.out.println(processes.toString());
     }
 
     public void removeProcessFromMemory(String processName) {
         Process p;
-        if ((p = processTable.lookup(processName)) == null) {
+        if ((p = lookup(processName)) == null) {
             return;
         }
         mainMemory.removeProcess(p.getStartingPosition(), p.getSize());
-        processTable.removeProcess(p);
+        processes.remove(p);
+    }
+
+    private Process lookup(String processName) {
+        for (Process p : processes) {
+            if (processName.equals(p.getName())) {
+                return p;
+            }
+        }
+        return null;
     }
 }
