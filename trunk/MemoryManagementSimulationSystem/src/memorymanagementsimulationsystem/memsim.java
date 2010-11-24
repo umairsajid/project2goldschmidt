@@ -13,6 +13,10 @@ public class memsim {
     public static ProcessManager pManager;
 
     public static void main(String args[]) {
+        if(args.length != 1){
+            System.out.println("Usage: java memsim <algorithm type>");
+            return;
+        }
         configureSimulation(args);
         runSimulation();
     }
@@ -20,7 +24,7 @@ public class memsim {
     public static void configureSimulation(String args[]) {
         pManager = new ProcessManager();
         AllocationAlgorithm algorithmType = AllocationAlgorithm.getInstance();
-        algorithmType.setAlgorithm("next");
+        algorithmType.setAlgorithm(args[0]);
     }
 
     public static void runSimulation() {
