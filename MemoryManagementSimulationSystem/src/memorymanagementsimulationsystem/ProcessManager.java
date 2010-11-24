@@ -5,7 +5,7 @@
 package memorymanagementsimulationsystem;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Random;
 
 /**
  *
@@ -72,5 +72,15 @@ public class ProcessManager {
             }
         }
         return null;
+    }
+
+    public void exitProcesses() {
+        Random processExitRNG = new Random();
+        for (Process p : processes) {
+            if (processExitRNG.nextInt(10) <= 10) {
+                mainMemory.removeProcess(p.getStartingPosition(), p.getSize());
+                processes.remove(p);
+            }
+        }
     }
 }

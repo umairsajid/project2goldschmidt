@@ -4,6 +4,7 @@
  */
 package memorymanagementsimulationsystem;
 
+import java.io.Console;
 import java.util.Random;
 
 /**
@@ -15,29 +16,34 @@ public class memsim {
     public static ProcessManager pManager;
 
     public static void main(String args[]) {
-        if(args.length != 1){
-            System.out.println("Usage: java memsim <algorithm type>");
+        if (args.length != 2) {
+            System.out.println("Usage: java memsim <algorithm type> <probability>");
             return;
         }
-        configureSimulation(args);
-        runSimulation();
+        configureSimulation(args[0]);
+        runSimulation(Integer.valueOf(args[1]));
     }
 
-    public static void configureSimulation(String args[]) {
+    public static void configureSimulation(String algorithm) {
         pManager = new ProcessManager();
         AllocationAlgorithm algorithmType = AllocationAlgorithm.getInstance();
-        algorithmType.setAlgorithm(args[0]);
+        algorithmType.setAlgorithm(algorithm);
     }
 
-    public static void runSimulation() {
+    public static void runSimulation(int processEnterProbability) {
         Random myRandomNumber = new Random();
-        for (int i = 0; i < 13; i++) {
-            pManager.addNewProcess(myRandomNumber.nextInt(90)+10);
+        Random processSize = new Random();
+        Console c = System.console();
+        if (c == null) {
+            System.err.println("No console.");
+            System.exit(1);
         }
-        pManager.removeProcessFromMemory("A");
-        pManager.removeProcessFromMemory("D");
-        for (int i = 0; i < 25; i++) {
-            pManager.addNewProcess(myRandomNumber.nextInt(90)+10);
+        while ("c".equals(c.readLine())) {
+            if(processEnterProbability <= myRandomNumber.nextInt(100)){
+                System.out.println("adding process...");
+                pManager.addNewProcess(processSize.nextInt(90)+10);
+            }
+            pManager.exitProcesses();
         }
         pManager.printMemory();
     }
