@@ -4,6 +4,8 @@
  */
 package memorymanagementsimulationsystem;
 
+import java.util.Random;
+
 /**
  *
  * @author Lew Gordon
@@ -28,15 +30,15 @@ public class memsim {
     }
 
     public static void runSimulation() {
+        Random myRandomNumber = new Random();
         for (int i = 0; i < 13; i++) {
-            pManager.addNewProcess(80);
+            pManager.addNewProcess(myRandomNumber.nextInt(90)+10);
         }
         pManager.removeProcessFromMemory("A");
         pManager.removeProcessFromMemory("D");
         for (int i = 0; i < 25; i++) {
-            pManager.addNewProcess(80);
+            pManager.addNewProcess(myRandomNumber.nextInt(90)+10);
         }
         pManager.printMemory();
-        //pManager.printProcesses();
     }
 }
