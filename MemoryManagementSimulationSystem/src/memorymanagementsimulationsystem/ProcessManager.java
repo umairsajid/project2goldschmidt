@@ -37,14 +37,17 @@ public class ProcessManager {
                 System.out.println("Please defragment, out of memory.");
                 return;
             }
+            System.out.println("Adding process "+processNamer);
             processes.add(new Process(processNamer.toString(), processSize, processStartingPosition));
             if (processNamer.equals('\\')) {
                 processNamer = 'a';
+            } else if (processNamer.equals('z')) {
+                processNamer = 'A';
+            } else {
+                processNamer++;
             }
-            processNamer++;
             return;
         }
-        //printProcesses();
         defragmentMemory();
     }
 
@@ -76,10 +79,11 @@ public class ProcessManager {
 
     public void exitProcesses() {
         Random processExitRNG = new Random();
-        for (Process p : processes) {
-            if (processExitRNG.nextInt(10) <= 10) {
-                mainMemory.removeProcess(p.getStartingPosition(), p.getSize());
-                processes.remove(p);
+        for (int i = 0; i < processes.size(); i++) {
+            if (10 >= processExitRNG.nextInt(100)) {
+                System.out.println("Process "+processes.get(i).getName()+" exiting.");
+                mainMemory.removeProcess(processes.get(i).getStartingPosition(), processes.get(i).getSize());
+                processes.remove(processes.get(i));
             }
         }
     }
