@@ -24,11 +24,9 @@ public class ProcessManager {
     }
 
     public void defragmentMemory() {
-        System.out.println("Defragmenting...");
         ArrayList<Process> updatedProcesses;
         /*For each free memory block find the biggest process that can fit into it.*/
         updatedProcesses = mainMemory.defragment();
-        System.out.println("Updated processes, " + updatedProcesses.size());
         updateProcesses(updatedProcesses);
     }
 
