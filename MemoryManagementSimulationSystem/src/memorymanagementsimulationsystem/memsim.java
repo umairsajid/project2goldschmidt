@@ -50,7 +50,7 @@ public class memsim {
             if (processEnterProbability >= myRandomNumber.nextInt(100)) {
                 pManager.addNewProcess(processSize.nextInt(90) + 10);
             }
-            //pManager.exitProcesses();
+            pManager.exitProcesses();
             pManager.printMemory();
             System.out.println("Type 'c' to continue and 'q' to quit.");
             if (AUTOMATE == true) {
