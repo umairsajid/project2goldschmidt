@@ -14,7 +14,7 @@ import java.util.Random;
 public class ProcessManager {
 
     private final int OUT_OF_MEMORY = -1;
-    private ArrayList<Process> processes;
+    private static ArrayList<Process> processes;
     public MainMemory mainMemory;
     public Character processNamer = 'A';
 
@@ -25,8 +25,11 @@ public class ProcessManager {
 
     public void defragmentMemory() {
         System.out.println("Defragmenting...");
-        /**/
-        //updateProcesses = mainMemory.defragment();
+        ArrayList<Process> updatedProcesses;
+        /*For each free memory block find the biggest process that can fit into it.*/
+        updatedProcesses = mainMemory.defragment();
+        System.out.println("Updated processes, " + updatedProcesses.size());
+        updateProcesses(updatedProcesses);
     }
 
     public void addNewProcess(Integer processSize) {
@@ -37,7 +40,7 @@ public class ProcessManager {
                 System.out.println("Please defragment, out of memory.");
                 return;
             }
-            System.out.println("Adding process "+processNamer);
+            System.out.println("Adding process " + processNamer);
             processes.add(new Process(processNamer.toString(), processSize, processStartingPosition));
             if (processNamer.equals('\\')) {
                 processNamer = 'a';
@@ -68,7 +71,7 @@ public class ProcessManager {
         processes.remove(p);
     }
 
-    private Process lookup(String processName) {
+    public static Process lookup(String processName) {
         for (Process p : processes) {
             if (processName.equals(p.getName())) {
                 return p;
@@ -81,10 +84,19 @@ public class ProcessManager {
         Random processExitRNG = new Random();
         for (int i = 0; i < processes.size(); i++) {
             if (10 >= processExitRNG.nextInt(100)) {
-                System.out.println("Process "+processes.get(i).getName()+" exiting.");
+                System.out.println("Process " + processes.get(i).getName() + " exiting.");
                 mainMemory.removeProcess(processes.get(i).getStartingPosition(), processes.get(i).getSize());
                 processes.remove(processes.get(i));
             }
+        }
+    }
+
+    private void updateProcesses(ArrayList<Process> updatedProcesses) {
+        Process oldProcess;
+        for (Process updatedProcess : updatedProcesses) {
+            oldProcess = ProcessManager.lookup(updatedProcess.getName());
+            processes.remove(oldProcess);
+            processes.add(updatedProcess);
         }
     }
 }

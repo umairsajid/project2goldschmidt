@@ -31,7 +31,7 @@ public class memsim {
         pManager = new ProcessManager();
         AllocationAlgorithm algorithmType = AllocationAlgorithm.getInstance();
         algorithmType.setAlgorithm("first");
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 20; i++) {
             pManager.addNewProcess(processSize.nextInt(90) + 10);
         }
         algorithmType.setAlgorithm(algorithm);
@@ -50,7 +50,7 @@ public class memsim {
             if (processEnterProbability >= myRandomNumber.nextInt(100)) {
                 pManager.addNewProcess(processSize.nextInt(90) + 10);
             }
-            pManager.exitProcesses();
+            //pManager.exitProcesses();
             pManager.printMemory();
             System.out.println("Type 'c' to continue and 'q' to quit.");
             if (AUTOMATE == true) {

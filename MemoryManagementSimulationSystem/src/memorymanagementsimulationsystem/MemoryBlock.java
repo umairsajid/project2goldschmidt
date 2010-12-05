@@ -29,7 +29,7 @@ public class MemoryBlock {
     protected int getStartingPosition(){
         return startingPosition;
     }
-    protected void setStartingPosition(){
+    protected void setStartingPosition(int startingPosition){
         this.startingPosition = startingPosition;
     }
     @Override

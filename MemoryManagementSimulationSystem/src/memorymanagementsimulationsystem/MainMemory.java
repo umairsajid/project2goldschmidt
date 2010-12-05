@@ -32,17 +32,18 @@ public class MainMemory {
         freeMemory = 2320;
     }
 
-    public ArrayList<Process> defragment(){
+    protected ArrayList<Process> defragment() {
+        System.out.println("Defragmenting memory...");
+        /*Find first memory block*/
         ArrayList<Process> updatedProcesses = new ArrayList<Process>();
-        int freeBlockStartingPosition = 0;
-        int freeBlockSize = 0;
-        /*Find first free memory block*/
-        while((freeBlockStartingPosition+freeBlockSize)<2400){
-            freeBlockStartingPosition = getFirstFreeCellLocation(freeBlockStartingPosition);
-            freeBlockSize = getSizeOfMemoryBlock(freeBlockStartingPosition);
+        Process updatedProcess;
+        MemoryBlock freeMemoryBlock;
+        while((freeMemoryBlock = findFirstFreeMemoryBlock(0))!=null){
+            if((updatedProcess = moveClosestProcessToFreeBlock(freeMemoryBlock))==null){
+                return updatedProcesses;
+            }
+            updatedProcesses.add(updatedProcess);
         }
-        /*If there is one*/
-        /*Find first process that fits into the block.*/
         return updatedProcesses;
     }
 
@@ -130,12 +131,10 @@ public class MainMemory {
         }
         /*Check size of free memory block.*/
         while ((freeMemBlockSize = getSizeOfMemoryBlock(startingFreePosition)) < processSize) {
-            System.out.println("Free block size is "+freeMemBlockSize);
             /*Memory block too small check next one.*/
             if ((startingFreePosition = getFirstFreeCellLocation(startingFreePosition + freeMemBlockSize)) < 0) {
                 return OUT_OF_MEMORY;
             }
-            System.out.println("Free mem block size is " + freeMemBlockSize);
         }
         processStartingPosition = startingFreePosition;
 
@@ -169,9 +168,9 @@ public class MainMemory {
         }
 
         /*Find the closest free memory block to the last allocation.*/
-        if((processStartingPosition = findNextMemoryBlock(freeMemoryBlocks, processSize))!=-1){
+        if ((processStartingPosition = findNextMemoryBlock(freeMemoryBlocks, processSize)) != -1) {
             blockPos.setPosition(processStartingPosition);
-            allocateProcess(processName,processSize,processStartingPosition);
+            allocateProcess(processName, processSize, processStartingPosition);
             return processStartingPosition;
         }
 
@@ -200,7 +199,7 @@ public class MainMemory {
                 break;
             }
         }
-        Collections.sort(freeMemoryBlocks, new SortByLargestSize());
+        Collections.sort(freeMemoryBlocks, new SortByLargestMemoryBlock());
 
         /*Find smallest memory block that process can fit into*/
         processStartingPosition = findLargestMemoryBlock(freeMemoryBlocks, processSize);
@@ -270,6 +269,35 @@ public class MainMemory {
             }
         }
         return -1;
+    }
+
+    /*Finds the first available memory block from the starting position*/
+    private MemoryBlock findFirstFreeMemoryBlock(int startingPosition) {
+        MemoryBlock freeMemoryBlock = new MemoryBlock();
+        int blockStartingPosition = getFirstFreeCellLocation(0);
+        int blockSize = getSizeOfMemoryBlock(blockStartingPosition);
+        freeMemoryBlock.setStartingPosition(blockStartingPosition);
+        freeMemoryBlock.setSize(blockSize);
+        if (blockSize == 0) {
+            return null;
+        }
+        return freeMemoryBlock;
+    }
+
+    private Process moveClosestProcessToFreeBlock(MemoryBlock freeMemoryBlock) {
+        /*Find closest process*/
+        int firstMemCell = freeMemoryBlock.getStartingPosition()+freeMemoryBlock.getSize()+1;
+        if(firstMemCell > 2400){
+            System.out.println("firstMemCell: "+firstMemCell);
+            return null;
+        }
+        /*Move closest process to free memory space.*/
+
+        Process updatedProcess = ProcessManager.lookup(memoryCells[firstMemCell].getOwnedProcessType());
+        this.removeProcess(updatedProcess.getStartingPosition(),updatedProcess.getSize());
+        this.allocateProcess(updatedProcess.getName(), updatedProcess.getSize(), freeMemoryBlock.getStartingPosition());
+        updatedProcess.setStartingPosition(freeMemoryBlock.getStartingPosition());
+        return updatedProcess;
     }
 
 }
