@@ -213,8 +213,6 @@ public class MainMemory {
             return OUT_OF_MEMORY;
         }
         /*Allocate process at starting position.*/
-        System.out.println("process starting pos: "+processStartingPosition);
-        System.out.println("process size: "+processSize);
         allocateProcess(processName, processSize, processStartingPosition);
         return processStartingPosition;
     }
