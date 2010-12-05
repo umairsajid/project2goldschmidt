@@ -10,7 +10,7 @@ import java.util.Comparator;
  *
  * @author Lew Gordon
  */
-public class SortByLargestSize implements Comparator {
+public class SortByLargestMemoryBlock implements Comparator {
 
     public int compare(Object o1, Object o2) {
         MemoryBlock memBlock1, memBlock2;

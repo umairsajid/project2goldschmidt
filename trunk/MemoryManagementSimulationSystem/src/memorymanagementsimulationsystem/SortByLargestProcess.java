@@ -7,7 +7,7 @@ package memorymanagementsimulationsystem;
 import java.util.Comparator;
 
 /**
- *
+ * Largest process comes first in the array.
  * @author lgordon2
  */
 public class SortByLargestProcess implements Comparator {
