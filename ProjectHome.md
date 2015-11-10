@@ -1,0 +1,1 @@
+Mimics modern operating systems' management of loading data into memory.
